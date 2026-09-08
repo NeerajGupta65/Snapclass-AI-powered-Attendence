@@ -20,3 +20,8 @@ pillow  #for image processing give extra features
 
 #frontend
 streamlit
+
+
+#voice
+librosa
+resemblyzer 
