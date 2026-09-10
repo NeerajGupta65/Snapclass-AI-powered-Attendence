@@ -1,4 +1,3 @@
-from resemblyzer import VoiceEncoder, preprocess_wav
 import numpy as np 
 import io
 import librosa
@@ -7,7 +6,17 @@ import streamlit as st
 
 @st.cache_resource
 def load_voice_encoder():
+    # Import lazily so a machine that cannot load PyTorch can still start and
+    # use every non-voice part of SnapClass.
+    from resemblyzer import VoiceEncoder
+
     return VoiceEncoder()
+
+
+def preprocess_voice(audio):
+    from resemblyzer import preprocess_wav
+
+    return preprocess_wav(audio)
 
 
 def get_voice_embedding(audio_bytes):
@@ -15,11 +24,11 @@ def get_voice_embedding(audio_bytes):
         encoder = load_voice_encoder()
 
         audio, sr = librosa.load(io.BytesIO(audio_bytes), sr=16000)
-        wav = preprocess_wav(audio)
+        wav = preprocess_voice(audio)
         embedding = encoder.embed_utterance(wav)
         return embedding.tolist()
     except Exception as e:
-        st.error('Voice recog error')
+        st.error(f'Voice recognition is unavailable: {e}')
         return None
     
 
@@ -60,7 +69,7 @@ def process_bulk_audio(audio_bytes, candidates_dict, threshold=0.65):
             if (end-start) < sr * 0.5:
                 continue
             segment_audio = audio[start:end]
-            wav = preprocess_wav(segment_audio)
+            wav = preprocess_voice(segment_audio)
             embedding = encoder.embed_utterance(wav)
 
 
@@ -72,5 +81,5 @@ def process_bulk_audio(audio_bytes, candidates_dict, threshold=0.65):
 
         return identified_results
     except Exception as e:
-        st.error('Bulk process error')
+        st.error(f'Bulk voice processing is unavailable: {e}')
         return {}

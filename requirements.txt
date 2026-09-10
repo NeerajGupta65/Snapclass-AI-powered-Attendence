@@ -1,5 +1,7 @@
 streamlit
 
+--extra-index-url https://download.pytorch.org/whl/cpu
+
 
 #utilities
 numpy
@@ -11,7 +13,7 @@ scikit-learn
 dlib-bin
 
 git+https://github.com/ageitgey/face_recognition_models.git
-setuptools<70.0.0
+setuptools>=77,<81
 
 #database
 supabase
@@ -24,4 +26,9 @@ pillow  #for image processing give extra feature
 
 #voice
 librosa
-resemblyzer 
+# Resemblyzer's legacy dependency has no Python 3.13 wheel. Install its
+# maintained binary replacement first, then Resemblyzer without dependencies.
+torch==2.8.0+cpu
+webrtcvad-wheels; python_version >= "3.13"
+webrtcvad; python_version < "3.13"
+resemblyzer; python_version < "3.13"
