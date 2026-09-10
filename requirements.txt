@@ -1,3 +1,6 @@
+streamlit
+
+
 #utilities
 numpy
 pandas
@@ -16,10 +19,7 @@ bcrypt
 
 
 segno    #for qr code
-pillow  #for image processing give extra features
-
-#frontend
-streamlit
+pillow  #for image processing give extra feature
 
 
 #voice
